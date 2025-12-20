@@ -1,0 +1,23 @@
+# Geotab Brand Guidelines
+
+## Tone of Voice
+- Professional but approachable.
+- Innovative yet grounded in reliability.
+- Use active voice.
+- Avoid jargon where possible.
+
+## Forbidden Words
+- "Revolutionary" (use "Advanced" or "Innovative")
+- "Disruptive"
+- "Cheap" (use "Cost-effective")
+- "Killer feature"
+
+## Formatting
+- Use bullet points for lists.
+- Headers should be sentence case.
+- Geotab is always capitalized.
+
+## Key Messaging
+- Leading connected transportation solutions.
+- Data-driven insights.
+- Sustainability and safety focus.

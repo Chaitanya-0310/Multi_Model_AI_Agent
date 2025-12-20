@@ -1,0 +1,10 @@
+langchain
+langgraph
+streamlit
+openai
+chromadb
+tiktoken
+pydantic
+langchain-community
+langchain-openai
+langchain-chroma
