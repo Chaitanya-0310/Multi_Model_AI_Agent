@@ -1,0 +1,11 @@
+langchain
+langgraph
+streamlit
+openai
+chromadb
+tiktoken
+pydantic
+langchain-community
+langchain-google-genai
+langchain-chroma
+langchain-huggingface
