@@ -8,9 +8,9 @@ sys.path.append(os.path.join(os.getcwd(), "src"))
 from src.rag import ingest_docs
 from src.agents import create_graph
 
-st.set_page_config(page_title="Geotab Marketing Campaign Orchestrator", layout="wide")
+st.set_page_config(page_title="Marketing Campaign Orchestrator", layout="wide")
 
-st.title("🤖 Geotab Marketing Campaign Orchestrator")
+st.title("🤖 Marketing Campaign Orchestrator")
 st.markdown("""
 This agentic workflow takes a high-level campaign goal and:
 1. **Plans** the necessary assets.
