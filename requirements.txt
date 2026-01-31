@@ -9,3 +9,14 @@ langchain-community
 langchain-google-genai
 langchain-chroma
 langchain-huggingface
+sentence-transformers
+fastapi
+uvicorn
+guardrails-ai
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+python-dateutil
+google-generativeai
+requests
+mcp>=0.1.0

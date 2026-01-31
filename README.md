@@ -1,18 +1,13 @@
 # 🚀 Marketing Campaign Orchestrator
 An intelligent, agentic AI application that automates the creation of marketing campaigns. It uses **LangGraph** to orchestrate a team of AI agents that plan, write, and review marketing assets, grounded in your company's knowledge base using **RAG** (Retrieval-Augmented Generation).
+
 ## ✨ Features
 *   **Strategic Planning:** Automatically determines the best assets (emails, posts, blogs) for your campaign goal.
 *   **RAG-Powered Drafting:** Writes content using your actual product documentation and brand history.
+*   **Human-in-the-Loop:** Review and provide feedback on drafts before finalization, with iterative regeneration based on your input.
 *   **Brand Compliance:** A dedicated agent reviews all content against your brand guidelines to ensure consistency.
+*   **MCP Integration:** Direct Google Docs integration using Model Context Protocol for seamless third-party integrations.
 *   **Interactive UI:** Built with **Streamlit** for easy interaction and configuration.
-
-## Screenshots
-<img width="1893" height="869" alt="Screenshot 2025-12-23 143253" src="https://github.com/user-attachments/assets/d34ec154-3437-4079-a46d-e4dc85fdc782" />
-<img width="1864" height="838" alt="Screenshot 2025-12-23 143300" src="https://github.com/user-attachments/assets/8d6a8bf8-08c9-46d7-8238-02043cea7a26" />
-<img width="1868" height="876" alt="Screenshot 2025-12-23 143449" src="https://github.com/user-attachments/assets/49a12976-5e9c-4882-a710-1c7bc354c835" />
-<img width="1883" height="868" alt="Screenshot 2025-12-23 143458" src="https://github.com/user-attachments/assets/b45b89f5-1aa1-4de0-ba5f-9af9b5e8f16d" />
-<img width="1488" height="448" alt="Screenshot 2025-12-23 143634" src="https://github.com/user-attachments/assets/8e5ca0d2-f3bd-4f4e-bba8-81a4e5da7f46" />
-
 ## 🛠️ Architecture
 The system is built on a **StateGraph** workflow and a **RAG** engine.
 
@@ -91,7 +86,53 @@ See [rag_architecture.md](./rag_architecture.md) for detailed RAG architecture f
     *   Click **"Re-ingest Knowledge Base"** to load your documents into the vector store.
 3.  **Run a Campaign:**
     *   Enter a goal (e.g., *"Promote our new eco-friendly sneaker launch on Instagram"*).
-    *   Click **"Run Campaign"**.
+    *   Click **"🚀 Start Campaign"**.
+    *   **Review the plan** and approve to continue.
+    *   **Review drafts** - the app will pause for your feedback.
+    *   **Provide feedback** - Approve drafts or request revisions with specific instructions.
+    *   **Final review** - Review compliance check before publishing.
+    *   **Publish** - Drafts are published to Google Docs and scheduled in Calendar.
+
+## 🔄 Human-in-the-Loop Feature
+
+The application now includes an interactive feedback loop:
+
+1. **Draft Review Stage**: After content generation, you can review each draft individually
+2. **Approve or Request Revisions**: For each draft, you can:
+   - ✅ **Approve** - Accept the draft as-is
+   - 🔄 **Request Revision** - Provide specific feedback for regeneration
+3. **Iterative Refinement**: Rejected drafts are regenerated incorporating your feedback
+4. **Bulk Actions**: Approve all drafts at once if satisfied
+5. **Status Tracking**: See which drafts are approved, pending, or need revision
+
+### Example Feedback
+- "Make the tone more professional and formal"
+- "Add statistics about market growth"
+- "Include a call-to-action at the end"
+- "Make it shorter and more concise"
+
+## 🔌 MCP Server Integration
+
+The application supports **Model Context Protocol (MCP)** for Google Docs integration:
+
+### What is MCP?
+MCP provides a standardized way to integrate external services. Instead of directly calling Google APIs, the app can use MCP servers for better:
+- **Standardization**: Works across multiple services (Docs, Drive, Gmail, Slack, etc.)
+- **Extensibility**: Easy to add new MCP servers
+- **Separation of concerns**: Server handles auth and API details
+
+### Setup MCP (Optional)
+The application works without MCP (using direct Google API), but MCP provides enhanced integration:
+
+1. **See detailed setup guide**: [docs/mcp_setup.md](docs/mcp_setup.md)
+2. **Quick setup**:
+   - Install Node.js
+   - Set up Google Cloud OAuth credentials
+   - Add credentials to `.env` file
+   - MCP server auto-starts when needed
+
+### Automatic Fallback
+If MCP is not configured or fails, the app automatically falls back to direct Google API. No configuration required for basic functionality!
 ## 🧩 Technologies
 *   **LangChain & LangGraph**: Agent orchestration.
 *   **Streamlit**: User Interface.
@@ -100,3 +141,9 @@ See [rag_architecture.md](./rag_architecture.md) for detailed RAG architecture f
 *   **Google Gemini**: LLM (Gemini 1.5 Flash).
 *   **Hugging Face**: Embeddings (all-MiniLM-L6-v2).
 
+## Screenshots
+<img width="1893" height="869" alt="Screenshot 2025-12-23 143253" src="https://github.com/user-attachments/assets/d34ec154-3437-4079-a46d-e4dc85fdc782" />
+<img width="1864" height="838" alt="Screenshot 2025-12-23 143300" src="https://github.com/user-attachments/assets/8d6a8bf8-08c9-46d7-8238-02043cea7a26" />
+<img width="1868" height="876" alt="Screenshot 2025-12-23 143449" src="https://github.com/user-attachments/assets/49a12976-5e9c-4882-a710-1c7bc354c835" />
+<img width="1883" height="868" alt="Screenshot 2025-12-23 143458" src="https://github.com/user-attachments/assets/b45b89f5-1aa1-4de0-ba5f-9af9b5e8f16d" />
+<img width="1488" height="448" alt="Screenshot 2025-12-23 143634" src="https://github.com/user-attachments/assets/8e5ca0d2-f3bd-4f4e-bba8-81a4e5da7f46" />

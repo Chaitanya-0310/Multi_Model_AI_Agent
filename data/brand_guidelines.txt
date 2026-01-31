@@ -1,23 +1,31 @@
-# Geotab Brand Guidelines
+BRAND VOICE & TONE GUIDELINES
 
-## Tone of Voice
-- Professional but approachable.
-- Innovative yet grounded in reliability.
-- Use active voice.
-- Avoid jargon where possible.
+Company: TechFlow Solutions
+Mission: Empowering businesses through innovative cloud solutions
 
-## Forbidden Words
-- "Revolutionary" (use "Advanced" or "Innovative")
-- "Disruptive"
-- "Cheap" (use "Cost-effective")
-- "Killer feature"
+Brand Voice:
+- Professional yet approachable
+- Technical but not jargon-heavy
+- Solution-focused and results-driven
+- Innovative and forward-thinking
 
-## Formatting
-- Use bullet points for lists.
-- Headers should be sentence case.
-- Geotab is always capitalized.
+Tone Guidelines:
+- Use active voice
+- Keep sentences concise (under 25 words)
+- Address pain points directly
+- Always include measurable benefits
+- Avoid superlatives like "best" or "perfect"
 
-## Key Messaging
-- Leading connected transportation solutions.
-- Data-driven insights.
-- Sustainability and safety focus.
+Key Messaging:
+- Cloud migration made simple
+- 50% faster deployment times
+- Enterprise-grade security
+- 24/7 customer support
+
+Prohibited Terms:
+- "Revolutionary" (overused)
+- "Game-changer" (cliché)
+- Competitor names: CloudCorp, DataMax, SkyNet Solutions
+
+Colors: #0066CC (primary), #00CC66 (accent)
+Logo: Always use full logo, never icon alone

@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "gdrive": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-gdrive"
+      ],
+      "env": {
+        "GDRIVE_CLIENT_ID": "${GDRIVE_CLIENT_ID}",
+        "GDRIVE_CLIENT_SECRET": "${GDRIVE_CLIENT_SECRET}",
+        "GDRIVE_REDIRECT_URI": "http://localhost:3000/oauth2callback"
+      }
+    }
+  }
+}
