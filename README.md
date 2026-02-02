@@ -11,6 +11,51 @@ An intelligent, agentic AI application that automates the creation of marketing 
 ## 🛠️ Architecture
 The system is built on a **StateGraph** workflow and a **RAG** engine.
 
+## Complete Agent Workflow with Human-in-the-Loop
+
+The following diagram shows the full agent workflow including the new **Feedback Processor** node for human-in-the-loop functionality:
+
+```mermaid
+graph TD
+    Router[Router] --> Planner[Planner]
+    Planner --> Retriever[Retriever]
+    Retriever --> RetrievalGrader[Retrieval Grader]
+    
+    RetrievalGrader -->|relevant| Writer[Writer]
+    RetrievalGrader -->|irrelevant| QueryRewriter[Query Rewriter]
+    
+    QueryRewriter --> Retriever
+    
+    Writer --> HallucinationGrader[Hallucination Grader]
+    
+    HallucinationGrader -->|grounded| FeedbackProcessor[Feedback Processor]
+    HallucinationGrader -->|hallucinated| QueryRewriter
+    HallucinationGrader -->|more assets needed| Retriever
+    
+    FeedbackProcessor -->|needs revision| Retriever
+    FeedbackProcessor -->|all approved| Reviewer[Reviewer]
+    
+    Reviewer --> Publisher[Publisher]
+    Publisher --> End[End]
+    
+    style FeedbackProcessor fill:#90EE90
+    style Writer fill:#FFE4B5
+    style Retriever fill:#ADD8E6
+```
+
+**Workflow Nodes:**
+- **Router**: Classifies user intent (marketing campaign vs chitchat)
+- **Planner**: Determines which marketing assets to create
+- **Retriever**: Fetches relevant context from knowledge base (RAG)
+- **Retrieval Grader**: Validates relevance of retrieved documents
+- **Writer**: Generates content using RAG-retrieved context
+- **Hallucination Grader**: Ensures content is grounded in retrieved context
+- **Feedback Processor** ⭐ NEW ⭐: Handles human feedback and triggers regeneration
+- **Reviewer**: Checks brand compliance against guidelines
+- **Publisher**: Creates Google Docs and schedules calendar events
+
+**Human-in-the-Loop**: The workflow pauses at the Feedback Processor, allowing users to review drafts, provide feedback, and request revisions. Rejected drafts are regenerated incorporating user feedback.
+
 ```mermaid
 graph TD
     subgraph Frontend
