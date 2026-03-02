@@ -1,30 +1,52 @@
-CUSTOMER SUCCESS STORIES
+CUSTOMER SUCCESS STORIES — Wealthsimple
 
-Case Study 1: HealthTech Inc.
-Industry: Healthcare
-Challenge: Legacy system migration with HIPAA compliance
-Solution: DataGuard Enterprise + CloudSync Pro
-Results:
-- Migrated 5TB of patient data in 72 hours
-- Zero compliance violations
-- 40% reduction in IT costs
-- Quote: "TechFlow made our cloud transition seamless" - CTO Sarah Johnson
+Disclaimer: Individual experiences vary. Past performance is not indicative of future results.
+All case studies are based on anonymised user personas with consent. Names have been changed.
 
-Case Study 2: RetailMax
-Industry: E-commerce
-Challenge: Scaling during holiday season
-Solution: FlexScale Analytics
-Results:
-- Handled 300% traffic increase
-- Real-time inventory insights
-- 25% increase in conversion rate
-- ROI: 280% in first 6 months
+---
 
-Case Study 3: FinanceFirst Bank
-Industry: Financial Services
-Challenge: Security and compliance requirements
-Solution: Complete TechFlow Suite
-Results:
-- Passed SOC 2 audit on first attempt
-- 99.99% uptime achieved
-- Reduced data breach risk by 95%
+Case Study 1: First-Time Investor Persona
+Name: Priya (anonymised), Age: 28, Occupation: Registered Nurse
+Challenge: No investing experience; kept all savings in a no-interest chequing account; felt intimidated by financial jargon
+Solution: Wealthsimple Invest — TFSA, Balanced Growth portfolio, automated $200/month contributions
+Outcome:
+- Built a diversified global ETF portfolio without needing any financial expertise
+- Automatic rebalancing meant she never had to manually manage allocations
+- Socially responsible investing (SRI) option aligned with her values
+- "I finally stopped keeping my savings in a chequing account. It took me 10 minutes to set up."
+Key message: Wealthsimple Invest removes the barrier between Canadians and long-term wealth building.
+
+Disclaimer: Individual experiences vary. Past performance is not indicative of future results.
+Results are based on a specific user experience and may not be representative of all customers.
+
+---
+
+Case Study 2: Self-Directed Trader Persona
+Name: Marcus (anonymised), Age: 35, Occupation: Software Engineer
+Challenge: Was paying ~$240/year in trading commissions at a bank brokerage; frustrated by slow trade execution and lack of USD account
+Solution: Wealthsimple Trade — Personal account + USD account (Premium plan)
+Outcome:
+- Eliminated all per-trade commissions; saved approximately $240/year based on prior trading frequency
+- Held US equities directly in USD account, avoiding FX conversion fees on every transaction
+- Accessed Level 2 market data and instant deposits with Wealthsimple Trade Premium ($10/month)
+- "Moving to Wealthsimple Trade was the easiest financial decision I've made. No commissions, and my USD account means I'm not losing money on currency conversion every time I buy Apple."
+Key message: Wealthsimple Trade lets self-directed investors keep more of their returns by eliminating commissions.
+
+Disclaimer: Individual experiences vary. Savings estimates based on prior individual trading activity and are not guaranteed for all users.
+Past performance is not indicative of future results.
+
+---
+
+Case Study 3: Tax Season Persona
+Name: Danielle (anonymised), Age: 42, Occupation: Small Business Owner (Sole Proprietor)
+Challenge: Previously paid $200+ annually for a tax accountant; found the process stressful and time-consuming
+Solution: Wealthsimple Tax — auto-fill from CRA My Account + Wealthsimple Cash FHSA for savings
+Outcome:
+- Filed personal taxes in approximately 45 minutes using CRA auto-fill
+- NETFILE certified submission was accepted by CRA the same day
+- Switched to Wealthsimple Cash high-interest FHSA savings to grow her first-home down payment
+- "I was shocked it was free. I used to dread tax season. Now I actually look forward to getting my refund."
+Key message: Wealthsimple Tax makes filing free, fast, and less stressful for all Canadians.
+
+Disclaimer: Individual experiences vary. Time-to-file estimates based on specific user data. Actual filing time depends on the complexity of your tax situation.
+Past performance is not indicative of future results.

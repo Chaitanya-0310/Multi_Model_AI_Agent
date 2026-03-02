@@ -7,6 +7,7 @@ tiktoken
 pydantic
 langchain-community
 langchain-google-genai
+langchain-groq
 langchain-chroma
 langchain-huggingface
 sentence-transformers
@@ -20,3 +21,6 @@ python-dateutil
 google-generativeai
 requests
 mcp>=0.1.0
+langfuse>=2.0.0
+langfuse-langchain>=2.0.0
+pandas

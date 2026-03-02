@@ -1,0 +1,195 @@
+MARKETING COMPLIANCE GUIDELINES
+Wealthsimple — Regulatory & Brand Compliance Reference
+Last Updated: March 2026
+
+=============================================================
+SECTION 1: GENERAL PRINCIPLES
+=============================================================
+
+All marketing and advertising materials produced by Wealthsimple must:
+
+1. Be truthful, accurate, and not misleading.
+2. Be substantiated — all claims must be backed by verifiable data or cited sources.
+3. Not make absolute guarantees about financial returns, outcomes, or performance.
+4. Include appropriate disclaimers when discussing product performance or case study results.
+5. Not disparage or make false claims about competitors.
+6. Comply with applicable Canadian advertising and securities standards (CSA, CIRO, OSC, CASL, ASC).
+
+=============================================================
+SECTION 2: PROHIBITED LANGUAGE & ABSOLUTE CLAIMS
+=============================================================
+
+The following phrases and patterns are PROHIBITED in all marketing materials:
+
+PROHIBITED ABSOLUTE GUARANTEES:
+- "guaranteed returns" / "guaranteed results" / "guaranteed savings"
+- "risk-free investment" / "risk-free returns" / "zero risk"
+- "100% certain" / "100% guaranteed" / "absolutely certain"
+- "always profitable" / "never lose" / "no risk involved"
+- "you will definitely" / "we guarantee you will"
+- "certain to succeed" / "will always work"
+- "fail-proof" / "foolproof" / "infallible"
+- "get rich quick"
+
+PROHIBITED SUPERLATIVES (without substantiation):
+- "the best in the market" / "#1 in the industry" / "market leader" (unless independently verified)
+- "perfect solution" / "perfect for everyone"
+- "revolutionary" (overused, subjective, not permitted)
+- "game-changer" / "game changer" (prohibited brand term)
+- "most advanced" / "most powerful" / "most secure" (unless benchmarked)
+
+WHY: Absolute claims expose the company to consumer protection litigation and regulatory scrutiny under the Competition Act (Canada), CIRO Dealer Member Rules, OSC Staff Notices, and CSA National Instrument 31-103.
+
+=============================================================
+SECTION 3: FINANCIAL PRODUCT DISCLAIMERS
+=============================================================
+
+When marketing investment products, savings accounts, or tax-filing services:
+
+REQUIRED DISCLAIMER (must appear in all investment-related marketing):
+"Past performance is not indicative of future results.
+Investing involves risk. The value of your investments can go down as well as up."
+
+REQUIRED DISCLAIMER (case studies and testimonials):
+"Individual experiences vary. Past performance is not indicative of future results."
+
+WHEN TO ADD DISCLAIMERS:
+- Any mention of interest rates (e.g., "4.5% interest") → Must add: "Interest rate subject to change. See wealthsimple.com for current rates."
+- Any mention of portfolio returns or historical performance → Must add: "Past performance is not indicative of future results."
+- Any mention of fee percentages (e.g., "0.5% annual fee") → Must cite the applicable account tier and note that fees are subject to change.
+- Any mention of savings amounts (e.g., "saved $240/year in commissions") → Must add: "Savings based on individual usage. Results may vary."
+
+CIRO COMPLIANCE NOTE (Canadian Investment Regulatory Organization):
+Under CIRO (formerly IIROC) Dealer Member Rules and CSA National Instrument 31-103, any performance claims used in marketing to retail investors must include a disclosure that past performance is not indicative of future performance. All Wealthsimple Invest and Wealthsimple Trade materials are subject to this requirement.
+
+OSC GUIDANCE (Ontario Securities Commission):
+Marketing materials distributed in Ontario that reference investment performance, fees, or suitability must comply with OSC Staff Notice 33-748 and applicable securities legislation. Testimonials must be identified as such and must not imply typical results.
+
+CSA REQUIREMENTS (Canadian Securities Administrators):
+All marketing referring to registered accounts (TFSA, RRSP, FHSA) must accurately describe contribution limits and eligibility. Do not imply tax benefits that do not apply to a user's specific situation.
+
+FINTRAC COMPLIANCE NOTE (Financial Transactions and Reports Analysis Centre of Canada):
+Marketing materials must not misrepresent Wealthsimple's KYC/AML obligations. Do not suggest that onboarding can bypass identity verification. All new account openings are subject to FINTRAC KYC requirements under the Proceeds of Crime (Money Laundering) and Terrorist Financing Act.
+
+NATIONAL INSTRUMENT 31-103 (NI 31-103):
+Suitability obligations require that marketing does not suggest products are appropriate for all investors without qualification. Avoid language implying all users should invest the same way. Include suitability language where appropriate: "Before investing, consider your investment objectives, risk tolerance, and time horizon."
+
+CIPF DISCLOSURE (Canadian Investor Protection Fund):
+Where applicable, marketing for Wealthsimple Trade and Wealthsimple Invest may include: "Wealthsimple Investments Inc. is a member of the Canadian Investor Protection Fund (CIPF)." Do not overstate CIPF protection — CIPF covers custodial assets in case of member insolvency, not investment losses.
+
+=============================================================
+SECTION 4: COMPETITOR REFERENCES
+=============================================================
+
+PROHIBITED:
+- Directly naming competitors in a negative context (e.g., "Unlike Questrade, we don't charge hidden fees")
+- Implying competitor products are unsafe, insecure, or fraudulent without third-party proof
+- Using competitor trademarks or logos in any marketing material
+- Naming: Questrade, TD Direct Investing, RBC Direct Investing, Nest Wealth, Betterment
+
+PERMITTED (with legal review):
+- Side-by-side feature comparison tables (must be factually accurate and dated)
+- General category comparisons ("traditional bank brokerages") without naming specific vendors
+- Independent analyst reports that reference competitor rankings (must cite report + date)
+
+=============================================================
+SECTION 5: REQUIRED DISCLOSURES & FOOTNOTES
+=============================================================
+
+CASE STUDY DISCLOSURES:
+All case studies and success stories must include:
+- Customer identifier (anonymised label with consent note if confidential)
+- Timeframe of the results
+- Source of metrics (self-reported, third-party audit, etc.)
+- Disclaimer: "Individual experiences vary. Past performance is not indicative of future results. Results are based on a specific customer experience and may not be representative of all customers."
+
+STATISTICS AND DATA CITATIONS:
+- All statistics must be cited: "(Source: Wealthsimple Internal Data, Q4 2025)"
+- Industry benchmark data must include the benchmark source and year
+- Interest rates must be labelled with the effective date: "(As of March 2026)"
+
+TESTIMONIALS:
+- Must be genuine and verifiable
+- Must include the customer's name or anonymised label with a note that the name has been changed
+- Must not be edited in a way that changes the meaning
+- Must not imply typical results
+
+=============================================================
+SECTION 6: CHANNEL-SPECIFIC REQUIREMENTS
+=============================================================
+
+EMAIL MARKETING:
+- Must comply with CASL (Canada's Anti-Spam Legislation) — express or implied consent required
+- Must include physical mailing address and unsubscribe mechanism in every message
+- Subject lines must not use deceptive tactics (e.g., "Re: Your account" when there is no prior conversation)
+- Promotional claims in subject lines must be honoured in the email body
+- Investment-related emails must include the required financial disclaimer in the footer
+
+SOCIAL MEDIA:
+- Sponsored posts must be labelled as "#ad" or "#sponsored" as required by the Competition Bureau guidelines
+- Employee advocacy posts that mention Wealthsimple products should include "#WealthsimpleEmployee"
+- Do not use urgency language that creates false scarcity
+- Interest rate posts must include an effective date and note that rates are subject to change
+
+PRESS RELEASES:
+- All financial metrics must be sourced and accurate at the time of publication
+- Product launches must not pre-announce features that have not been approved for release
+- Quote attributions must be verified with the quoted individual before distribution
+- Must include: "Wealthsimple Investments Inc. is registered as a Portfolio Manager and Exempt Market Dealer in each province and territory of Canada."
+
+BLOG / LONG-FORM CONTENT:
+- Affiliate or sponsored content must be clearly disclosed
+- Statistics older than 3 years should be refreshed or removed
+- Any reference to registered account limits (TFSA, RRSP, FHSA) must reflect the current CRA annual limits
+- Claims about CDIC eligibility (Wealthsimple Cash) must link to the CDIC member institution disclosure
+
+=============================================================
+SECTION 7: SEVERITY CLASSIFICATION FOR COMPLIANCE FLAGS
+=============================================================
+
+HIGH SEVERITY (must be corrected before publication):
+- Absolute guarantee language (guaranteed, risk-free, 100% certain, never lose, get rich quick)
+- Missing required investment disclaimer when performance or returns are cited
+- Direct competitor disparagement
+- Unverified superlative claims ("the best", "#1", "most advanced") without a cited source
+- Missing CIPF disclosure in applicable investment product marketing
+
+MEDIUM SEVERITY (should be corrected; may publish with documented acknowledgement):
+- Unsubstantiated percentage statistics without a cited source
+- Missing CTA (call to action) in promotional materials
+- Platform character limits exceeded
+- Overly long sentences (>20 words) per Wealthsimple brand guidelines
+- Interest rate mentioned without effective date
+
+LOW SEVERITY (best practice improvement, not blocking):
+- Passive voice overuse
+- Missing testimonial attribution
+- Informal language in formal channels
+- Minor style guide deviations
+- Financial jargon used without plain-language explanation
+
+=============================================================
+SECTION 8: APPROVAL WORKFLOW
+=============================================================
+
+TIER 1 — AI-assisted draft (automated compliance check):
+All drafts must pass automated checks before human review.
+
+TIER 2 — Human review (Campaign Director):
+Campaign Director must review and approve all flagged items. HIGH severity flags require explicit acknowledgement before the Approve button is unlocked.
+
+TIER 3 — Legal/Compliance sign-off (required for):
+- Any press release mentioning regulatory compliance or CIPF/CDIC membership
+- Any email campaign to investors referencing returns or performance
+- Any materials citing unverified third-party statistics
+- Any direct competitive comparison
+- Any materials referencing NI 31-103 suitability obligations
+
+TIER 4 — Executive approval (required for):
+- Campaigns with budget > $50,000
+- Campaigns targeting C-suite executives or institutional investors
+- International campaigns subject to local regulatory requirements (outside Canada)
+
+=============================================================
+END OF COMPLIANCE GUIDELINES
+=============================================================

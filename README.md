@@ -1,145 +1,187 @@
-# 🚀 Marketing Campaign Orchestrator
-An intelligent, agentic AI application that automates the creation of marketing campaigns. It uses **LangGraph** to orchestrate a team of AI agents that plan, write, and review marketing assets, grounded in your company's knowledge base using **RAG** (Retrieval-Augmented Generation).
+# 🚀 Wealthsimple Marketing Campaign Orchestrator
+
+An intelligent, agentic AI application that automates the creation of marketing campaigns for Wealthsimple. It uses **LangGraph** to orchestrate a team of AI agents that plan, write, review, and publish marketing assets — grounded in Wealthsimple's real product knowledge base using **RAG** (Retrieval-Augmented Generation).
+
+Built as a demonstration of AI-native marketing orchestration: replacing a 2-week, 5-person workflow with ~20 minutes and 3 human decisions.
 
 ## ✨ Features
-*   **Strategic Planning:** Automatically determines the best assets (emails, posts, blogs) for your campaign goal.
-*   **RAG-Powered Drafting:** Writes content using your actual product documentation and brand history.
-*   **Human-in-the-Loop:** Review and provide feedback on drafts before finalization, with iterative regeneration based on your input.
-*   **Brand Compliance:** A dedicated agent reviews all content against your brand guidelines to ensure consistency.
-*   **MCP Integration:** Direct Google Docs integration using Model Context Protocol for seamless third-party integrations.
-*   **Interactive UI:** Built with **Streamlit** for easy interaction and configuration.
+
+- **Strategic Planning**: Automatically determines the best assets (emails, posts, blogs, press releases) for a campaign goal — with projected KPI benchmarks per asset type
+- **RAG-Powered Drafting**: Writes content grounded in Wealthsimple product documentation, brand guidelines, and customer success stories
+- **Audience Variant Generator**: Generates a primary draft and a complementary audience-segment variant for every asset
+- **Compliance Checker**: Deterministic regex-based compliance gate (BLOCK / WARN / PASS) — checks for guaranteed-return language, missing disclaimers, competitor references, and unverified superlatives before human review
+- **Human-in-the-Loop (HITL)**: Three explicit human decision points — plan approval, draft review with per-draft feedback, and final publish authorization
+- **Brand Compliance Review**: A dedicated reviewer agent validates all content against Wealthsimple brand voice guidelines
+- **Observability**: Full Langfuse tracing — per-node spans, retrieval metrics, guardrail results, and human feedback scores
+- **MCP Integration**: Optional Google Docs integration via Model Context Protocol, with automatic fallback to direct Google API
+- **Interactive UI**: Built with Streamlit — 5-stage guided workflow with progress tracker and human decision audit trail
+
 ## 🛠️ Architecture
-The system is built on a **StateGraph** workflow and a **RAG** engine.
+
+The system is built on a LangGraph **StateGraph** workflow and a ChromaDB **RAG** engine.
 
 ```mermaid
 graph TD
-    subgraph Frontend
-        UI[Streamlit UI]
-    end
+    Router[Router] --> Planner[Planner]
+    Planner --> Retriever[Retriever]
+    Retriever --> RetrievalGrader[Retrieval Grader]
 
-    subgraph Agents [LangGraph Agents]
-        Planner[Planner Agent]
-        Writer[Writer Agent]
-        Reviewer[Reviewer Agent]
-    end
+    RetrievalGrader -->|relevant| Writer[Writer]
+    RetrievalGrader -->|irrelevant| QueryRewriter[Query Rewriter]
+    QueryRewriter --> Retriever
 
-    subgraph RAG [RAG Engine]
-        Ingest[Ingestion Pipeline]
-        VectorDB[(Chroma Vector Store)]
-        Retriever[Retriever]
-    end
+    Writer --> ComplianceChecker[Compliance Checker]
+    ComplianceChecker --> HallucinationGrader[Hallucination Grader]
 
-    subgraph External
-        Google[Google Gemini 1.5 Flash]
-        HF[HuggingFace Embeddings]
-    end
+    HallucinationGrader -->|grounded| FeedbackProcessor[Feedback Processor]
+    HallucinationGrader -->|hallucinated| QueryRewriter
 
-    UI -->|Campaign Goal| Planner
-    UI -->|Trigger Re-ingest| Ingest
-    
-    Planner -->|Plan| Writer
-    Writer -->|Drafts| Reviewer
-    Reviewer -->|Critique| UI
+    FeedbackProcessor -->|needs revision| Retriever
+    FeedbackProcessor -->|all approved| Reviewer[Reviewer]
 
-    Writer <-->|Query/Context| Retriever
-    Reviewer <-->|Query/Context| Retriever
-    
-    Ingest -->|Text Chunks| VectorDB
-    Retriever <-->|Similarity Search| VectorDB
-    
-    Agents -.->|Generation| Google
-    RAG -.->|Embeddings| HF
+    Reviewer --> Publisher[Publisher]
+    Publisher --> End[End]
+
+    style ComplianceChecker fill:#FFB3B3
+    style FeedbackProcessor fill:#90EE90
+    style Writer fill:#FFE4B5
+    style Retriever fill:#ADD8E6
 ```
 
-1.  **User Input:** Defines the campaign goal.
-2.  **Planner Agent:** Decides what to build.
-3.  **Writer Agent:** Generates drafts using RAG (retrieving context via HuggingFace embeddings).
-4.  **Reviewer Agent:** Critiques drafts against brand rules.
+**Agent Nodes:**
+1. **Router** — Classifies intent (Factual / Analytical / ChitChat / ClarificationNeeded)
+2. **Planner** — Builds the asset plan + calls `CampaignPerformanceEstimatorTool` for KPI benchmarks
+3. **Retriever** ⏸️ — Fetches context from the Wealthsimple knowledge base
+4. **Retrieval Grader** — Validates document relevance; triggers Query Rewriter on failure
+5. **Writer** — Generates primary draft + audience variant; CompetitorCheck guardrail applied
+6. **Compliance Checker** — Deterministic regex scan: BLOCK / WARN / PASS; HIGH flags gate the UI Approve button
+7. **Hallucination Grader** — Verifies the draft is grounded in retrieved facts
+8. **Feedback Processor** ⏸️ — Routes revised drafts back to Retriever or forwards approved drafts to Reviewer
+9. **Reviewer** — Brand voice and compliance review against Wealthsimple guidelines
+10. **Publisher** ⏸️ — Creates Google Docs, schedules Calendar events
 
+⏸️ = HITL interrupt point (`interrupt_before=["retriever", "feedback_processor", "publisher"]`)
+
+See [rag_architecture.md](./rag_architecture.md) for detailed RAG architecture and flow diagrams.
 See [agents.md](./agents.md) for detailed agent specifications.
-See [rag_architecture.md](./rag_architecture.md) for detailed RAG architecture flows.
+
 ## 📂 Project Structure
-*   `app.py`: Main Streamlit application entry point.
-*   `src/agents.py`: Definitions of the Planner, Writer, and Reviewer agents and the LangGraph workflow.
-*   `src/rag.py`: RAG implementation (Ingestion and Retrieval) using ChromaDB and HuggingFace Embeddings.
-*   `data/`: Directory for knowledge base text files (brand guidelines, product docs).
-*   `requirements.txt`: Python dependencies.
+
+```
+├── app.py                          # Streamlit frontend (5-stage HITL workflow)
+├── backend.py                      # FastAPI REST API alternative
+├── src/
+│   ├── agents.py                   # LangGraph StateGraph + all agent nodes
+│   ├── config.py                   # Model config, prompts, competitor list
+│   ├── rag.py                      # ChromaDB ingestion + retrieval
+│   ├── tools.py                    # LangChain tools (RAG, compliance, estimator)
+│   ├── google_utils.py             # Google Docs + Calendar API helpers
+│   ├── mcp_client.py               # MCP client for Google Docs integration
+│   └── langfuse_integration.py     # Langfuse observability client + handlers
+├── data/
+│   ├── brand_guidelines.txt        # Wealthsimple brand voice + prohibited terms
+│   ├── product_catalog.txt         # Wealthsimple Invest, Trade, Cash, Tax
+│   ├── customer_success_stories.txt# Anonymised user persona case studies
+│   └── compliance_guidelines.txt   # CIRO, OSC, CSA, FINTRAC, NI 31-103, CIPF
+├── chroma_db/                      # Persisted ChromaDB vector store
+├── docs/
+│   ├── mcp_setup.md                # MCP integration setup guide
+│   └── LANGFUSE_SETUP.md           # Langfuse observability setup guide
+├── rag_architecture.md             # Detailed RAG + workflow architecture
+├── agents.md                       # Agent specifications
+└── requirements.txt
+```
+
 ## 🚀 Getting Started
+
 ### Prerequisites
-*   Python 3.10+
-*   Google API Key (Gemini)
+- Python 3.10+
+- Google API Key (Gemini)
+
 ### Installation
-1.  **Clone the repository** (if applicable).
-2.  **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-3.  **Set up Knowledge Base:**
-    *   Place your text documents (e.g., `brand_guidelines.txt`, `product_info.txt`) inside the `data/` folder.
+
+1. **Clone the repository**
+2. **Create a virtual environment and install dependencies:**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+3. **Configure environment variables** — copy `.env.example` to `.env` and fill in:
+   ```
+   GOOGLE_API_KEY=your_key_here
+   LANGFUSE_PUBLIC_KEY=optional
+   LANGFUSE_SECRET_KEY=optional
+   ```
+
 ### Running the App
-1.  **Start the Streamlit server:**
-    ```bash
-    streamlit run app.py
-    ```
-2.  **Configure:**
-    *   Enter your Google API Key in the sidebar.
-    *   Click **"Re-ingest Knowledge Base"** to load your documents into the vector store.
-3.  **Run a Campaign:**
-    *   Enter a goal (e.g., *"Promote our new eco-friendly sneaker launch on Instagram"*).
-    *   Click **"🚀 Start Campaign"**.
-    *   **Review the plan** and approve to continue.
-    *   **Review drafts** - the app will pause for your feedback.
-    *   **Provide feedback** - Approve drafts or request revisions with specific instructions.
-    *   **Final review** - Review compliance check before publishing.
-    *   **Publish** - Drafts are published to Google Docs and scheduled in Calendar.
 
-## 🔄 Human-in-the-Loop Feature
+1. **Start Streamlit:**
+   ```bash
+   streamlit run app.py
+   ```
+2. **Configure:**
+   - Enter your Google API Key in the sidebar
+   - Click **"Re-ingest Knowledge Base"** to load Wealthsimple documents into the vector store
+3. **Run a Campaign:**
+   - Pick a quick-start template (Wealthsimple Invest / Trade / Cash / Tax Season) or use the Goal Builder
+   - Click **"🚀 Start Campaign"**
+   - **Stage 2 — Approve Plan:** Review the strategic plan and KPI benchmark table
+   - **Stage 3 — Review Drafts:** Check compliance flags; view primary + variant tabs; acknowledge any HIGH flags
+   - **Stage 3b — Feedback:** Approve each draft or request targeted revisions
+   - **Stage 4 — Authorize Publish:** Final brand compliance review; export campaign brief or publish to Google Workspace
 
-The application now includes an interactive feedback loop:
+## 🔄 Human-in-the-Loop
 
-1. **Draft Review Stage**: After content generation, you can review each draft individually
-2. **Approve or Request Revisions**: For each draft, you can:
-   - ✅ **Approve** - Accept the draft as-is
-   - 🔄 **Request Revision** - Provide specific feedback for regeneration
-3. **Iterative Refinement**: Rejected drafts are regenerated incorporating your feedback
-4. **Bulk Actions**: Approve all drafts at once if satisfied
-5. **Status Tracking**: See which drafts are approved, pending, or need revision
+Three decisions are always kept human:
 
-### Example Feedback
-- "Make the tone more professional and formal"
-- "Add statistics about market growth"
-- "Include a call-to-action at the end"
-- "Make it shorter and more concise"
+| Decision Point | Why it stays human |
+|---|---|
+| ✅ Approve the strategic plan | Sets budget and resource direction |
+| ✅ Approve / revise each content draft | Editorial judgment; compliance accountability |
+| ✅ Authorize final publish to Google Workspace | Legal liability and reputational risk cannot be delegated to AI |
 
-## 🔌 MCP Server Integration
+**Compliance Gate:** If a draft has HIGH-severity compliance flags (e.g., "guaranteed returns" language, missing financial disclaimer), the Approve button is disabled until you check an acknowledgement checkbox — creating an explicit, auditable record that a human reviewed the risk.
 
-The application supports **Model Context Protocol (MCP)** for Google Docs integration:
+## 🛡️ Compliance & Guardrails
 
-### What is MCP?
-MCP provides a standardized way to integrate external services. Instead of directly calling Google APIs, the app can use MCP servers for better:
-- **Standardization**: Works across multiple services (Docs, Drive, Gmail, Slack, etc.)
-- **Extensibility**: Easy to add new MCP servers
-- **Separation of concerns**: Server handles auth and API details
+The Compliance Checker node runs deterministic regex checks (no LLM) on every draft:
 
-### Setup MCP (Optional)
-The application works without MCP (using direct Google API), but MCP provides enhanced integration:
+| Severity | Behaviour | Example triggers |
+|---|---|---|
+| **BLOCK** (HIGH) | Approve button disabled until acknowledged | "guaranteed returns", "risk-free", missing disclaimer |
+| **WARN** (MEDIUM) | Shown as warning; can publish with acknowledgement | Unsubstantiated %, missing CTA |
+| **PASS** (LOW / none) | Green badge; no gate | Minor style notes |
 
-1. **See detailed setup guide**: [docs/mcp_setup.md](docs/mcp_setup.md)
-2. **Quick setup**:
-   - Install Node.js
-   - Set up Google Cloud OAuth credentials
-   - Add credentials to `.env` file
-   - MCP server auto-starts when needed
+Canadian regulatory coverage: **CIRO**, **OSC**, **CSA**, **FINTRAC**, **NI 31-103**, **CIPF**, **CASL**
 
-### Automatic Fallback
-If MCP is not configured or fails, the app automatically falls back to direct Google API. No configuration required for basic functionality!
+## 📊 Observability (Langfuse)
+
+When `LANGFUSE_PUBLIC_KEY` and `LANGFUSE_SECRET_KEY` are set:
+- Every campaign run creates a trace with per-node spans
+- Retrieval relevance scores and hallucination grades are tracked
+- Human feedback decisions are logged as score events
+- A live trace URL appears in the sidebar during a campaign run
+
+See [docs/LANGFUSE_SETUP.md](docs/LANGFUSE_SETUP.md) for setup instructions.
+
+## 🔌 MCP Integration (Optional)
+
+The app supports **Model Context Protocol (MCP)** for Google Docs publishing. If not configured, it automatically falls back to direct Google API. See [docs/mcp_setup.md](docs/mcp_setup.md) for setup.
+
 ## 🧩 Technologies
-*   **LangChain & LangGraph**: Agent orchestration.
-*   **Streamlit**: User Interface.
-*   **ChromaDB**: Vector Database for RAG.
 
-*   **Google Gemini**: LLM (Gemini 1.5 Flash).
-*   **Hugging Face**: Embeddings (all-MiniLM-L6-v2).
+| Layer | Technology |
+|---|---|
+| **LLM** | Google Gemini 2.5 Flash |
+| **Embeddings** | HuggingFace `all-MiniLM-L6-v2` |
+| **Vector DB** | ChromaDB (local persistence) |
+| **Orchestration** | LangGraph `StateGraph` with HITL checkpointing |
+| **Framework** | LangChain |
+| **Frontend** | Streamlit |
+| **Observability** | Langfuse |
+| **Publishing** | Google Docs + Google Calendar API |
+| **Guardrails** | Custom regex + Guardrails-AI |
 
 ## Screenshots
 <img width="1893" height="869" alt="Screenshot 2025-12-23 143253" src="https://github.com/user-attachments/assets/d34ec154-3437-4079-a46d-e4dc85fdc782" />

@@ -1,31 +1,40 @@
-PRODUCT CATALOG - TechFlow Solutions
+PRODUCT CATALOG - Wealthsimple
 
-1. CloudSync Pro
-   - Automated cloud migration platform
-   - Supports AWS, Azure, Google Cloud
-   - Average migration time: 48 hours
-   - Pricing: $299/month per workspace
-   - Key features: Zero-downtime migration, automatic backups, rollback capability
-   - Target audience: Mid-size businesses (50-500 employees)
-   - Success rate: 99.7%
+1. Wealthsimple Invest
+   - Automated robo-advisor portfolio management
+   - Global ETF diversification; socially responsible investing (SRI) option
+   - Accounts: TFSA, RRSP, FHSA, non-registered, corporate
+   - Fees: 0.5%/yr (Basic), 0.4%/yr (Premium $100k+), 0.4%/yr (Generation $500k+)
+   - Target audience: First-time investors and hands-off wealth builders aged 25–40
+   - Key stat: Portfolios designed using Nobel-prize-influenced research
+   - Key features: Automatic rebalancing, dividend reinvestment, socially responsible portfolios
 
-2. DataGuard Enterprise
-   - End-to-end encryption and compliance suite
-   - GDPR, HIPAA, SOC 2 compliant
-   - Real-time threat detection
-   - Pricing: $499/month
-   - Key features: 256-bit encryption, audit logs, compliance reporting
-   - Target audience: Healthcare, Finance, Legal sectors
+2. Wealthsimple Trade
+   - Commission-free stock and ETF trading (TSX, NYSE, NASDAQ)
+   - CAD & USD accounts; real-time quotes
+   - Accounts: TFSA, RRSP, FHSA, personal, corporate
+   - Pricing: Free (Basic); $10/month (Premium) — Level 2 market data, instant deposits, USD account
+   - Target audience: Self-directed investors, millennials, active traders switching from bank brokerages
+   - Key stat: Over 3 million Canadians use Wealthsimple
+   - Key features: Fractional shares, no FX conversion on USD account, real-time Level 2 data (Premium)
 
-3. FlexScale Analytics
-   - Business intelligence and analytics platform
-   - Real-time dashboards and reporting
-   - ML-powered insights
-   - Pricing: From $199/month
-   - Key features: Custom dashboards, predictive analytics, API integrations
-   - Target audience: Data-driven organizations
+3. Wealthsimple Cash
+   - High-interest savings: 4.5% (Premium), 3.75% (Basic)
+   - No-fee chequing account + Visa prepaid card
+   - Instant e-Transfer; no minimum balance
+   - CDIC eligible (deposits held at partner CDIC member institutions)
+   - Target audience: Everyday Canadians, savers, those building an emergency fund or FHSA savings
+   - Key features: Instant e-Transfers, no monthly fees, no minimum balance, joint accounts
+
+4. Wealthsimple Tax
+   - Free online tax filing (formerly SimpleTax)
+   - Auto-fill from CRA My Account (NETFILE certified)
+   - Supports: T4, T4A, RRSP receipts, T5, investment income, self-employment
+   - Pay-what-you-want model
+   - Target audience: All Canadians filing personal tax returns, especially first-time filers and RRSP/TFSA contributors
+   - Key features: CRA auto-fill, NETFILE certified, guides for capital gains and RRSP deductions
 
 Recent Updates (Q1 2026):
-- CloudSync Pro now supports 10TB migrations
-- DataGuard added blockchain verification
-- FlexScale integrated with Salesforce and HubSpot
+- Wealthsimple Cash interest rate raised to 4.5% for Premium members
+- Wealthsimple Trade added FHSA account support
+- Wealthsimple Tax launched guided T1 wizard for first-time filers

@@ -1,31 +1,32 @@
 BRAND VOICE & TONE GUIDELINES
 
-Company: TechFlow Solutions
-Mission: Empowering businesses through innovative cloud solutions
+Company: Wealthsimple
+Mission: Making powerful financial tools available to everyone.
 
 Brand Voice:
-- Professional yet approachable
-- Technical but not jargon-heavy
-- Solution-focused and results-driven
-- Innovative and forward-thinking
+- Simple and human — no financial jargon
+- Honest and transparent (especially about fees)
+- Encouraging, never condescending
+- Proudly Canadian
 
 Tone Guidelines:
 - Use active voice
-- Keep sentences concise (under 25 words)
-- Address pain points directly
-- Always include measurable benefits
-- Avoid superlatives like "best" or "perfect"
+- Keep sentences concise (under 20 words)
+- Address real financial anxieties directly
+- Always include a clear, specific benefit (not vague)
+- Avoid urgency tactics or FOMO language
 
 Key Messaging:
-- Cloud migration made simple
-- 50% faster deployment times
-- Enterprise-grade security
-- 24/7 customer support
+- Commission-free investing for everyone
+- High-interest savings, no hidden fees
+- File your taxes free with Wealthsimple Tax
+- Automated portfolios built by experts, managed by algorithms
 
 Prohibited Terms:
+- "Get rich quick" / "guaranteed returns" / "risk-free"
 - "Revolutionary" (overused)
-- "Game-changer" (cliché)
-- Competitor names: CloudCorp, DataMax, SkyNet Solutions
+- "Game-changer" / "game changer" (cliché, prohibited)
+- Competitor names: Questrade, TD Direct Investing, RBC Direct Investing, Nest Wealth, Betterment
 
-Colors: #0066CC (primary), #00CC66 (accent)
-Logo: Always use full logo, never icon alone
+Visual Identity: Wealthsimple Green — #000000 text on #ffffff background, accent #00d4a1, minimalist sans-serif
+Logo: Always use full logo with wordmark; never icon alone

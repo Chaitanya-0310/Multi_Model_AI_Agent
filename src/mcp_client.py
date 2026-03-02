@@ -127,41 +127,51 @@ class MCPClient:
     def create_google_doc(self, title: str, content: str) -> Optional[tuple]:
         """
         Create a Google Doc using MCP.
-        
-        Args:
-            title: Document title
-            content: Document content
-            
+
+        Tries the tool names used by @modelcontextprotocol/server-gdrive.
+        Falls back to alternative names if the primary call fails.
+
         Returns:
-            Tuple of (doc_id, doc_url) or None if failed
+            Tuple of (doc_id, doc_url) or None if failed.
         """
         try:
-            # First, create the file
-            create_result = self.call_tool("create_file", {
+            # @modelcontextprotocol/server-gdrive exposes 'gdrive_create_file'
+            # Some versions use 'create_file' — try both
+            create_result = self.call_tool("gdrive_create_file", {
                 "name": title,
-                "mimeType": "application/vnd.google-apps.document"
+                "mimeType": "application/vnd.google-apps.document",
             })
-            
+
             if not create_result:
-                logger.error("Failed to create Google Doc via MCP")
-                return None
-            
-            doc_id = create_result.get("id")
-            doc_url = create_result.get("webViewLink")
-            
-            # Then, write content to it
-            if content:
-                write_result = self.call_tool("write_file", {
-                    "id": doc_id,
-                    "content": content
+                # Fallback to alternate tool name
+                create_result = self.call_tool("create_file", {
+                    "name": title,
+                    "mimeType": "application/vnd.google-apps.document",
                 })
-                
+
+            if not create_result:
+                logger.error("MCP: failed to create Google Doc — no valid tool response")
+                return None
+
+            doc_id = create_result.get("id") or create_result.get("fileId")
+            doc_url = (
+                create_result.get("webViewLink")
+                or create_result.get("url")
+                or f"https://docs.google.com/document/d/{doc_id}"
+            )
+
+            # Write content — try 'gdrive_update_file' then 'write_file'
+            if content and doc_id:
+                write_result = self.call_tool("gdrive_update_file", {
+                    "fileId": doc_id,
+                    "content": content,
+                })
                 if not write_result:
-                    logger.warning(f"Created doc but failed to write content: {doc_id}")
-            
+                    self.call_tool("write_file", {"id": doc_id, "content": content})
+
             logger.info(f"Created Google Doc via MCP: {doc_url}")
             return doc_id, doc_url
-            
+
         except Exception as e:
             logger.error(f"Error creating Google Doc via MCP: {e}")
             return None
