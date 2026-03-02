@@ -11,3 +11,4 @@ chroma_db/
 .env.example/
 ideas.txt
 JD.txt
+token.pickle

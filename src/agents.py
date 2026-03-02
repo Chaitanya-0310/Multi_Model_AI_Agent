@@ -75,6 +75,9 @@ class AgentState(TypedDict):
     draft_variants: Dict[str, str]             # Per asset: variant draft text
     # --- Feature: Performance Estimator ---
     performance_estimates: Dict[str, Dict]     # Per asset: {metric: value}
+    # --- Feature: Brand Review Gate ---
+    compliance_revision_requested: Optional[bool]   # None=not decided, False=accept, True=revise
+    compliance_revision_notes: Dict[str, str]        # Per-asset revision notes from brand review
 
 # --- Structured Outputs ---
 
@@ -726,6 +729,26 @@ def route_after_feedback(state: AgentState) -> str:
     logger.info("All drafts approved, proceeding to review...")
     return "reviewer"
 
+def brand_review_gate_node(state: AgentState) -> Dict:
+    """
+    HITL gate after brand compliance reviewer.
+    The graph pauses BEFORE this node so the UI can show the brand review critique
+    and collect the user's decision (accept or revise).
+    Routing is determined by compliance_revision_requested set via update_state from the UI.
+    """
+    logger.info("--- BRAND REVIEW GATE ---")
+    return {}  # Pure pass-through; routing reads state set by the UI
+
+
+def route_after_brand_review_gate(state: AgentState) -> str:
+    """Routes to feedback loop if user requested revisions, otherwise proceeds to publisher."""
+    if state.get("compliance_revision_requested", False):
+        logger.info("Brand review: revision requested → routing to feedback_processor")
+        return "feedback_processor"
+    logger.info("Brand review: accepted → routing to publisher")
+    return "publisher"
+
+
 # --- Graph Construction ---
 
 def create_graph():
@@ -739,6 +762,7 @@ def create_graph():
     workflow.add_node("retrieval_grader", retrieval_grader)
     workflow.add_node("hallucination_grader", hallucination_grader)
     workflow.add_node("reviewer", reviewer_node)
+    workflow.add_node("brand_review_gate", brand_review_gate_node)
     workflow.add_node("publisher", publisher_node)
     workflow.add_node("chitchat", chitchat_node)
     workflow.add_node("clarification", clarification_node)
@@ -793,7 +817,15 @@ def create_graph():
         }
     )
     
-    workflow.add_edge("reviewer", "publisher")
+    workflow.add_edge("reviewer", "brand_review_gate")
+    workflow.add_conditional_edges(
+        "brand_review_gate",
+        route_after_brand_review_gate,
+        {
+            "feedback_processor": "feedback_processor",
+            "publisher": "publisher",
+        }
+    )
     workflow.add_edge("publisher", END)
     workflow.add_edge("chitchat", END)
     workflow.add_edge("clarification", END)
@@ -801,6 +833,6 @@ def create_graph():
     memory = MemorySaver()
     return workflow.compile(
         checkpointer=memory,
-        interrupt_after=["planner"],                            # Pause after planner → show plan for approval
-        interrupt_before=["feedback_processor", "publisher"],   # Pause for draft review and publish auth
+        interrupt_after=["planner"],                                          # Pause after planner → plan approval
+        interrupt_before=["feedback_processor", "brand_review_gate", "publisher"],  # Draft review, compliance review, publish auth
     )

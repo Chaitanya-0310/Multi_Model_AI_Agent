@@ -117,12 +117,13 @@ def log_audit(stage: str, decision: str, details: str = ""):
 # ─── Progress Tracker ─────────────────────────────────────────────────────────
 
 STAGE_ORDER = [
-    ("entry",            "1. Define Goal"),
-    ("plan_approval",    "2. Approve Plan"),
-    ("draft_approval",   "3. Review Drafts"),
+    ("entry",               "1. Define Goal"),
+    ("plan_approval",       "2. Approve Plan"),
+    ("draft_approval",      "3. Review Drafts"),
     ("feedback_collection", "3. Review Drafts"),
-    ("review_approval",  "4. Authorize Publish"),
-    ("complete",         "5. Complete"),
+    ("compliance_review",   "4. Compliance Review"),
+    ("review_approval",     "5. Authorize Publish"),
+    ("complete",            "6. Complete"),
 ]
 
 STAGE_INDEX = {
@@ -130,16 +131,18 @@ STAGE_INDEX = {
     "plan_approval": 1,
     "draft_approval": 2,
     "feedback_collection": 2,
-    "review_approval": 3,
-    "complete": 4,
+    "compliance_review": 3,
+    "review_approval": 4,
+    "complete": 5,
 }
 
 UNIQUE_STAGES = [
-    ("entry",           "1. Define Goal"),
-    ("plan_approval",   "2. Approve Plan"),
-    ("draft_approval",  "3. Review Drafts"),
-    ("review_approval", "4. Authorize Publish"),
-    ("complete",        "5. Complete"),
+    ("entry",             "1. Define Goal"),
+    ("plan_approval",     "2. Approve Plan"),
+    ("draft_approval",    "3. Review Drafts"),
+    ("compliance_review", "4. Compliance Review"),
+    ("review_approval",   "5. Authorize Publish"),
+    ("complete",          "6. Complete"),
 ]
 
 
@@ -911,7 +914,7 @@ elif st.session_state.run_stage == "feedback_collection":
                     st.session_state.draft_statuses.get(a) == "needs_revision"
                     for a in drafts
                 )
-                with st.spinner("Processing feedback..." if needs_revision else "Preparing final review..."):
+                with st.spinner("Processing feedback..." if needs_revision else "Running brand compliance review..."):
                     st.session_state.graph.update_state(
                         st.session_state.config,
                         {
@@ -926,8 +929,129 @@ elif st.session_state.run_stage == "feedback_collection":
                         st.session_state.draft_statuses = {}
                         st.session_state.run_stage = "feedback_collection"
                     else:
-                        st.session_state.run_stage = "review_approval"
+                        st.session_state.run_stage = "compliance_review"
                     st.rerun()
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# STAGE: compliance_review — Brand compliance review with revision option
+# ═════════════════════════════════════════════════════════════════════════════
+
+elif st.session_state.run_stage == "compliance_review":
+
+    st.warning("⏸️ **HUMAN DECISION REQUIRED — Step 4 of 5:** Brand Compliance Review")
+    st.caption(
+        "Review the brand compliance assessment below. Accept all drafts to proceed to publish "
+        "authorization, or flag specific drafts for revision based on the reviewer's recommendations."
+    )
+
+    current_values = st.session_state.graph.get_state(st.session_state.config).values
+    drafts = current_values.get("drafts", {})
+    draft_variants = current_values.get("draft_variants") or {}
+    critique = current_values.get("critique", "")
+    confidence_scores = current_values.get("confidence_scores") or {}
+
+    # ── Brand Compliance Critique ─────────────────────────────────────────────
+    if critique:
+        with st.expander("📋 Full Brand Compliance Assessment", expanded=True):
+            st.markdown(critique)
+    st.divider()
+
+    # ── Per-draft decisions ───────────────────────────────────────────────────
+    st.subheader("Draft Decisions")
+    st.caption("For each draft, choose whether to accept the reviewer's assessment or request targeted revisions.")
+
+    revision_feedback = {}
+    revision_statuses = {}
+
+    for asset, content in drafts.items():
+        score = confidence_scores.get(asset)
+        badge = f"  ·  {_confidence_badge(score)} ({score*100:.0f}%)" if score is not None else ""
+        with st.expander(f"📄 {asset}{badge}", expanded=True):
+            show_draft_with_variants(asset, content, draft_variants.get(asset, ""))
+            st.divider()
+
+            d_col, fb_col = st.columns([1, 2])
+            with d_col:
+                decision = st.radio(
+                    "Decision",
+                    ["✅ Accept as-is", "🔄 Revise based on review"],
+                    key=f"cr_decision_{asset}",
+                )
+            with fb_col:
+                if "Revise" in decision:
+                    st.markdown("&nbsp;")
+                    fb = st.text_area(
+                        "Revision instructions",
+                        placeholder=(
+                            "e.g., 'Add the required financial disclaimer to paragraph 2', "
+                            "'Soften the guarantee language in the subject line'"
+                        ),
+                        height=90,
+                        key=f"cr_fb_{asset}",
+                    )
+                    revision_feedback[asset] = fb
+                    revision_statuses[asset] = "needs_revision"
+                else:
+                    revision_feedback[asset] = ""
+                    revision_statuses[asset] = "approved"
+
+    st.divider()
+
+    any_revisions = any(s == "needs_revision" for s in revision_statuses.values())
+    revision_count = sum(1 for s in revision_statuses.values() if s == "needs_revision")
+
+    col_accept, col_revise = st.columns([2, 1])
+
+    with col_accept:
+        if st.button(
+            "✅ Accept Review & Proceed to Publish Authorization",
+            type="primary",
+            use_container_width=True,
+            disabled=any_revisions,
+        ):
+            log_audit("Compliance Review", "Accepted brand compliance review",
+                      f"{len(drafts)} drafts accepted")
+            st.session_state.graph.update_state(
+                st.session_state.config,
+                {"compliance_revision_requested": False},
+            )
+            with st.spinner("Preparing publish authorization..."):
+                st.session_state.graph.invoke(None, config=st.session_state.config)
+                st.session_state.run_stage = "review_approval"
+                st.rerun()
+
+    with col_revise:
+        if st.button(
+            f"🔄 Send {revision_count} Draft(s) for Revision",
+            use_container_width=True,
+            disabled=not any_revisions,
+        ):
+            log_audit(
+                "Compliance Review",
+                f"Requested {revision_count} revision(s) based on brand review",
+                ", ".join(k for k, v in revision_statuses.items() if v == "needs_revision"),
+            )
+            st.session_state.graph.update_state(
+                st.session_state.config,
+                {
+                    "compliance_revision_requested": True,
+                    "user_feedback": revision_feedback,
+                    "draft_status": revision_statuses,
+                },
+            )
+            with st.spinner(f"Regenerating {revision_count} draft(s) and re-running brand review..."):
+                # invoke 1: brand_review_gate routes to feedback_processor → PAUSE before feedback_processor
+                st.session_state.graph.invoke(None, config=st.session_state.config)
+                # invoke 2: feedback_processor → writing loop → reviewer → PAUSE before brand_review_gate
+                st.session_state.graph.invoke(None, config=st.session_state.config)
+                st.session_state.draft_feedback = {}
+                st.session_state.draft_statuses = {}
+                st.session_state.run_stage = "compliance_review"
+                st.rerun()
+
+    if any_revisions:
+        st.info("Mark all drafts as ✅ Accept to enable the proceed button.")
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -936,7 +1060,7 @@ elif st.session_state.run_stage == "feedback_collection":
 
 elif st.session_state.run_stage == "review_approval":
 
-    st.warning("⏸️ **HUMAN DECISION REQUIRED — Step 4 of 4:** Final Publish Authorization")
+    st.warning("⏸️ **HUMAN DECISION REQUIRED — Step 5 of 5:** Final Publish Authorization")
     st.info(
         "**Why this decision must stay human:** Publishing commits your brand to these materials. "
         "Legal liability and reputational risk cannot be delegated to an automated system. "
