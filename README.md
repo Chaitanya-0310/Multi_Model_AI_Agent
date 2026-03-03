@@ -23,35 +23,71 @@ The system is built on a LangGraph **StateGraph** workflow and a ChromaDB **RAG*
 ## Complete Agent Workflow with Human-in-the-Loop
 
 The following diagram shows the full agent workflow including the new **Feedback Processor** node for human-in-the-loop functionality:
+## 0. Complete Agent Workflow with Human-in-the-Loop
+
+The following diagram shows the full agent workflow including all 14 nodes and 4 HITL interrupt points.
 
 ```mermaid
 graph TD
-    Router[Router] --> Planner[Planner]
-    Planner --> Retriever[Retriever]
-    Retriever --> RetrievalGrader[Retrieval Grader]
-    
-    RetrievalGrader -->|relevant| Writer[Writer]
-    RetrievalGrader -->|irrelevant| QueryRewriter[Query Rewriter]
-    
+    Router[Router\nIntent Classifier] -->|Factual/Analytical| Planner[Planner\nStrategist + KPI Estimator]
+    Router -->|ChitChat| Chitchat([Chitchat → END])
+    Router -->|ClarificationNeeded| Clarification([Clarification → END])
+
+    Planner -->|"⏸️ interrupt_after — Plan Approval"| Retriever
+
+    Retriever[Retriever\nChromaDB RAG] --> RetrievalGrader[Retrieval Grader\nRelevance Check]
+
+    RetrievalGrader -->|relevant| Writer[Writer\nDraft + Guardrails + Variant]
+    RetrievalGrader -->|irrelevant| QueryRewriter[Query Rewriter\nSemantic Optimiser]
+
     QueryRewriter --> Retriever
-    
-    Writer --> HallucinationGrader[Hallucination Grader]
-    
-    HallucinationGrader -->|grounded| FeedbackProcessor[Feedback Processor]
+
+    Writer --> ComplianceChecker[Compliance Checker\nRegex — No LLM]
+    ComplianceChecker --> HallucinationGrader[Hallucination Grader\nGrounding Check]
+
     HallucinationGrader -->|hallucinated| QueryRewriter
-    HallucinationGrader -->|more assets needed| Retriever
-    
+    HallucinationGrader -->|grounded, more assets| Retriever
+    HallucinationGrader -->|"grounded, all done ⏸️ interrupt_before"| FeedbackProcessor[Feedback Processor\nHITL Loop Handler]
+
     FeedbackProcessor -->|needs revision| Retriever
-    FeedbackProcessor -->|all approved| Reviewer[Reviewer]
-    
-    Reviewer --> Publisher[Publisher]
-    Publisher --> End[End]
-    
-    style FeedbackProcessor fill:#90EE90
-    style Writer fill:#FFE4B5
-    style Retriever fill:#ADD8E6
+    FeedbackProcessor -->|all approved| Reviewer[Reviewer\nBrand Compliance — Function Calling]
+
+    Reviewer --> BrandReviewGate[Brand Review Gate\nHITL Pass-Through]
+
+    BrandReviewGate -->|"⏸️ interrupt_before — Compliance Review"| BrandDecision{User Decision}
+    BrandDecision -->|Accept| Publisher[Publisher\nGoogle Docs + Calendar]
+    BrandDecision -->|Revise| FeedbackProcessor
+
+    Publisher -->|"⏸️ interrupt_before — Publish Authorization"| End([END])
+
+    style Planner         fill:#DDA0DD,color:#000
+    style Retriever       fill:#ADD8E6,color:#000
+    style Writer          fill:#FFE4B5,color:#000
+    style ComplianceChecker fill:#FFB3B3,color:#000
+    style FeedbackProcessor fill:#90EE90,color:#000
+    style BrandReviewGate fill:#FFFACD,color:#000
+    style Publisher       fill:#B0C4DE,color:#000
+    style BrandDecision   fill:#FFFACD,color:#000
 ```
 
+**Node Summary:**
+
+| Node | Role | LLM? | HITL? |
+|---|---|---|---|
+| **Router** | Classifies intent (Factual / Analytical / ChitChat / ClarificationNeeded) | ✅ structured | — |
+| **Planner** | Builds asset plan (3–5 items); calls `CampaignPerformanceEstimatorTool` for KPI benchmarks | ✅ structured | ⏸️ interrupt_after |
+| **Retriever** | ChromaDB similarity search (top-3 chunks) for the current asset | — | — |
+| **Retrieval Grader** | Validates relevance of retrieved documents; triggers Query Rewriter on failure | ✅ structured | — |
+| **Query Rewriter** | Rewrites goal into a focused semantic query when retrieval fails or draft hallucinates | ✅ | — |
+| **Writer** | Generates primary draft (+ CompetitorCheck guardrail) + audience variant | ✅ ×2 | — |
+| **Compliance Checker** | Deterministic regex scan: BLOCK / WARN / PASS — no LLM, fast and auditable | — | — |
+| **Hallucination Grader** | Verifies draft is grounded in retrieved documents; computes confidence score | ✅ structured | — |
+| **Feedback Processor** | Removes drafts needing revision, re-triggers writing loop; logs to Langfuse | — | ⏸️ interrupt_before |
+| **Reviewer** | Brand compliance via LLM function calling + `ContentQualityTool` | ✅ function calling | — |
+| **Brand Review Gate** | HITL pass-through — pauses for user to accept or request brand review revisions | — | ⏸️ interrupt_before |
+| **Publisher** | Creates Google Docs + schedules Calendar events per draft | — | ⏸️ interrupt_before |
+| **Chitchat** | Handles off-topic queries politely | ✅ | — |
+| **Clarification** | Prompts user to provide more detail for ambiguous goals | — | — |
 **Workflow Nodes:**
 - **Router**: Classifies user intent (marketing campaign vs chitchat)
 - **Planner**: Determines which marketing assets to create
@@ -63,35 +99,6 @@ graph TD
 - **Reviewer**: Checks brand compliance against guidelines
 - **Publisher**: Creates Google Docs and schedules calendar events
 
-**Human-in-the-Loop**: The workflow pauses at the Feedback Processor, allowing users to review drafts, provide feedback, and request revisions. Rejected drafts are regenerated incorporating user feedback.
-
-```mermaid
-graph TD
-    Router[Router] --> Planner[Planner]
-    Planner --> Retriever[Retriever]
-    Retriever --> RetrievalGrader[Retrieval Grader]
-
-    RetrievalGrader -->|relevant| Writer[Writer]
-    RetrievalGrader -->|irrelevant| QueryRewriter[Query Rewriter]
-    QueryRewriter --> Retriever
-
-    Writer --> ComplianceChecker[Compliance Checker]
-    ComplianceChecker --> HallucinationGrader[Hallucination Grader]
-
-    HallucinationGrader -->|grounded| FeedbackProcessor[Feedback Processor]
-    HallucinationGrader -->|hallucinated| QueryRewriter
-
-    FeedbackProcessor -->|needs revision| Retriever
-    FeedbackProcessor -->|all approved| Reviewer[Reviewer]
-
-    Reviewer --> Publisher[Publisher]
-    Publisher --> End[End]
-
-    style ComplianceChecker fill:#FFB3B3
-    style FeedbackProcessor fill:#90EE90
-    style Writer fill:#FFE4B5
-    style Retriever fill:#ADD8E6
-```
 
 **Agent Nodes:**
 1. **Router** — Classifies intent (Factual / Analytical / ChitChat / ClarificationNeeded)
@@ -229,8 +236,5 @@ The app supports **Model Context Protocol (MCP)** for Google Docs publishing. If
 | **Guardrails** | Custom regex + Guardrails-AI |
 
 ## Screenshots
-<img width="1893" height="869" alt="Screenshot 2025-12-23 143253" src="https://github.com/user-attachments/assets/d34ec154-3437-4079-a46d-e4dc85fdc782" />
-<img width="1864" height="838" alt="Screenshot 2025-12-23 143300" src="https://github.com/user-attachments/assets/8d6a8bf8-08c9-46d7-8238-02043cea7a26" />
-<img width="1868" height="876" alt="Screenshot 2025-12-23 143449" src="https://github.com/user-attachments/assets/49a12976-5e9c-4882-a710-1c7bc354c835" />
-<img width="1883" height="868" alt="Screenshot 2025-12-23 143458" src="https://github.com/user-attachments/assets/b45b89f5-1aa1-4de0-ba5f-9af9b5e8f16d" />
-<img width="1488" height="448" alt="Screenshot 2025-12-23 143634" src="https://github.com/user-attachments/assets/8e5ca0d2-f3bd-4f4e-bba8-81a4e5da7f46" />
+<img width="1913" height="871" alt="image" src="https://github.com/user-attachments/assets/981627b2-d560-4af9-bee6-d438a2a54175" />
+
